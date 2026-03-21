@@ -1,6 +1,4 @@
-# yfinanceとStreamlitで株価分析アプリを作ってみよう
-
-Qiita連載記事「yfinanceとStreamlitで株価分析アプリを作ってみよう」のサポートリポジトリです。
+# yfinanceを使って株価データをCSVでローカルに保存する
 
 <br><br>
 
@@ -24,10 +22,13 @@ pip install pandas yfinance openpyxl streamlit altair pyarrow
 
 ### 2. 東証上場銘柄一覧のダウンロード
 
-以下のJPXサイトから「東証上場銘柄一覧」をExcelでダウンロードし、`_topix_list.xlsx` というファイル名でスクリプトと同じフォルダに保存してください。
+以下のJPXサイトから「東証上場銘柄一覧」をExcelでダウンロードし、
 
-当該コードでは、「コード」という列に４桁の銘柄コード、「銘柄」という列に銘柄名を格納したExcelシートを作成して利用しています。
+- ファイル名：`_topix_list.xlsx`
+- 「コード」列：４桁の銘柄コード
+- 「銘柄」列：銘柄名
 
+として、スクリプトと同じフォルダに保存してください。
 
 - [東証上場銘柄一覧（JPX）](https://www.jpx.co.jp/markets/statistics-equities/misc/01.html)
 
