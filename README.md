@@ -92,7 +92,7 @@ python 03_yfinance_update.py
 - 取得データのタイムゾーンはUTCです。日本時間は `Datetime_JST` 列に変換済みです。
 - yfinanceのバージョンによってMultiIndex構造が変わる場合があります。本スクリプトでは動的に判定する処理を入れています。
 
----
+<br><br>
 
 ## データの取り扱いについて
 
@@ -119,7 +119,7 @@ python 03_yfinance_update.py
 
 - [Qiita：yfinanceから株価をロードして分析・可視化してみよう！（準備編）]()
 
----
+<br><br>
 
 ## License
 
