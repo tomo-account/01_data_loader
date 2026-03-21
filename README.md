@@ -1,4 +1,4 @@
-# yfinanceから株価をロードして分析・可視化してみよう！
+# yfinanceとStreamlitで株価分析アプリを作ってみよう
 
 Qiita連載記事「yfinanceとStreamlitで株価分析アプリを作ってみよう」のサポートリポジトリです。
 
