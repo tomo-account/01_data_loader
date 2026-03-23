@@ -7,9 +7,9 @@
 ```
 .
 ├── 01_stock_filtering.py     # 銘柄リストから分析対象を抽出
-├── 02_yfinance_init.py       # 初回に実施、過去データの一括取得・保存
-├── 03_yfinance_update.py     # 定期的に実施、最新データの継ぎ足し保存
-├── _topix_list.xlsx          # JPXのHPからダウンロード ※ここでは列名を少し変えています
+├── 02_yfinance_init.py       # 初回に実施、過去のOHLCVデータの一括取得・保存
+├── 03_yfinance_update.py     # 定期的に実施、最新のOHLCVデータの継ぎ足し保存
+├── _topix_list.xlsx          # JPXのHPからダウンロードしたデータ ※ここでは銘柄コードと銘柄名を使います
 ├── _filtering_list.xlsx      # 01_stock_filtering.py で生成されるファイル
 .
 ```
