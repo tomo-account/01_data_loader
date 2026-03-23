@@ -2,22 +2,26 @@
 
 <br><br>
 
-## ファイル構成
+## 📂 ファイル構成
 
-| ファイル | 内容 |
-|:---|:---|
-| `01_stock_filtering.py` | TOPIXリストからデイトレ向き銘柄を抽出する |
-| `02_yfinance_init.py` | 【初回のみ】株価データを一括取得してCSVに保存する |
-| `03_yfinance_update.py` | 【定期実行】最新データをCSVに継ぎ足し保存する |
+```
+.
+├── 01_stock_filtering.py     # 銘柄リストから分析対象を抽出
+├── 02_yfinance_init.py       # 初回に実施、過去データの一括取得・保存
+├── 03_yfinance_update.py     # 定期的に実施、最新データの継ぎ足し保存
+├── _topix_list.xlsx          # JPXのHPからダウンロード ※ここでは列名を少し変えています
+├── _filtering_list.xlsx      # 01_stock_filtering.py で生成されるファイル
+.
+```
 
 <br><br>
 
-## 事前準備
+## 🛠 事前準備
 
-### 1. 必要なライブラリのインストール
+### 1. ライブラリのインストール
 
 ```bash
-pip install pandas yfinance openpyxl streamlit altair pyarrow
+pip install pandas==2.3.3 yfinance==1.0 openpyxl==3.1.5 streamlit==1.52.2 altair==6.0.0 pyarrow==22.0.0
 ```
 
 ### 2. 東証上場銘柄一覧のダウンロード
@@ -69,7 +73,7 @@ python 02_yfinance_init.py
 | ファイル | 内容 | 取得期間 |
 |:---|:---|:---|
 | `_5min.csv` | 5分足データ | 直近60日 |
-| `_1h.csv` | 1時間足データ | 直近2年 |
+| `_1h.csv` | 1時間足データ | 直近2年 | 
 | `_daily.csv` | 日足データ | 直近3年 |
 
 > **注意**：銘柄数が多いため、完了まで数十分かかる場合があります。
