@@ -69,7 +69,7 @@ python 01_stock_filtering.py
 python 02_yfinance_init.py
 ```
 
-以下のCSVファイルが生成されます。
+以下のCSVファイルが生成されます。取得期間は好みで調整してください。
 
 | ファイル | 内容 | 取得期間 |
 |:---|:---|:---|
