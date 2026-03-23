@@ -42,12 +42,13 @@ pip install pandas==2.3.3 yfinance==1.0 openpyxl==3.1.5 streamlit==1.52.2 altair
 
 ### Step 1：銘柄フィルタリング（初回のみ）
 
-TOPIXの全銘柄から、売買代金・ボラティリティ・株価でフィルタリングして、デイトレ向き銘柄リストを作成します。
+値動きの乏しい銘柄や小規模な銘柄（超低位株など）を除外することで、インジケーターの「だまし」を減らし、分析の精度を高めます。
 
 ```bash
 python 01_stock_filtering.py
 ```
 
+ここでは、デイトレ向きの銘柄リストを作成します。
 実行すると `_filtering_list.xlsx` が生成されます。
 
 **フィルタリング条件（`01_stock_filtering.py` 内で変更可能）**
