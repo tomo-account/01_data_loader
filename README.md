@@ -12,7 +12,7 @@
 ├── 02_yfinance_init.py       # 初回に実施、過去のOHLCVデータの一括取得・保存を実行
 ├── 03_yfinance_update.py     # 定期的に実施、最新のOHLCVデータの継ぎ足し保存を実行
 ├── _topix_list.xlsx          # JPXのHPからダウンロードしたデータ ※ここでは銘柄コードと銘柄名を使います
-├── _filtering_list.xlsx      # 01_stock_filtering.py で生成されるファイル
+├── _stock_list.xlsx          # 01_stock_filtering.py で生成されるファイル、または監視銘柄などのリスト
 ├── _5min.csv                 # 02_yfinance_init.py で生成されるファイル、5分足のOHLCVデータ
 ├── _1h.csv                   # 02_yfinance_init.py で生成されるファイル、1時間足のOHLCVデータ
 ├── _daily.csv                # 02_yfinance_init.py で生成されるファイル、日足のOHLCVデータ
