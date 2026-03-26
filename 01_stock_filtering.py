@@ -6,7 +6,7 @@ a01_stock_filtering.py
 ■ 概要
   _topix_list.xlsx（東証上場銘柄一覧）を読み込み、
   売買代金・ボラティリティ・株価でフィルタリングして
-  デイトレ向き銘柄リストを _filtering_list.xlsx に保存します。
+  デイトレ向き銘柄リストを _stock_list.xlsx に保存します。
 
   このファイルは a03_yfinance_init.py / a03_yfinance_update.py で
   5分足・1時間足の取得対象銘柄として使用されます。
@@ -26,7 +26,7 @@ a01_stock_filtering.py
   https://www.jpx.co.jp/markets/statistics-equities/misc/01.html
 
 ■ 出力ファイル
-  _filtering_list.xlsx : フィルタリング後の銘柄リスト
+  _stock_list.xlsx : フィルタリング後の銘柄リスト
 
 ■ 注意事項
   - yfinanceは非公式APIです。CHUNK_SIZE と SLEEP_TIME を調整して
@@ -45,8 +45,8 @@ from datetime import datetime
 # ================================================
 # 設定
 # ================================================
-INPUT_FILE   = "_topix_list.xlsx"    # JPXからダウンロードした東証上場銘柄一覧
-OUTPUT_FILE  = "_filtering_list.xlsx"
+INPUT_FILE   = "_topix_list.xlsx"    # JPXからダウンロードした東証上場銘柄一覧、「コード」に銘柄コード、「銘柄」に銘柄名を格納
+OUTPUT_FILE  = "_stock_list.xlsx"
 TARGET_COUNT = 720                   # 抽出する銘柄数
 CHUNK_SIZE   = 50                    # yfinanceで一度に取得する銘柄数
 SLEEP_TIME   = 1.0                   # チャンク間の待機秒数（サーバー負荷軽減）

@@ -14,7 +14,7 @@ a03_yfinance_init.py
   2回目以降のデータ更新は a03_yfinance_update.py を使用してください。
 
 ■ 取得対象の銘柄
-  - 5分足・1時間足: _filtering_list.xlsx の「銘柄コード_yf」列
+  - 5分足・1時間足: _stock_list.xlsx の「銘柄コード_yf」列
   - 日足          : _topix_list.xlsx の「コード」列
   - 日経平均（^N225）はすべての時間足に追加されます
 
@@ -37,9 +37,9 @@ from datetime import datetime
 # ================================================
 # 設定
 # ================================================
-LIST_FILE_FILTERING = "_filtering_list.xlsx"   # 5分足・1時間足用銘柄リスト
+LIST_FILE_FILTERING = "_stock_list.xlsx"   # 5分足・1時間足データ取得用銘柄リスト
 LIST_FILE_TOPIX     = "_topix_list.xlsx"        # 日足用銘柄リスト（TOPIX全銘柄）
-EXCEL_TICKER_COL    = '銘柄コード_yf'           # filtering_list の列名
+EXCEL_TICKER_COL    = '銘柄コード_yf'           # stock_list の列名
 TOPIX_CODE_COL      = 'コード'                  # topix_list の列名
 TIMEZONE_JST        = 'Asia/Tokyo'
 SLEEP_TIME          = 0.5                       # 銘柄間の待機秒数（サーバー負荷軽減）

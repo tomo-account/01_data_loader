@@ -6,9 +6,9 @@ import shutil
 from datetime import datetime
 
 # --- 設定 ---
-LIST_FILE_FILTERING = "_filtering_list.xlsx"
+LIST_FILE_FILTERING = "_stock_list.xlsx"
 LIST_FILE_TOPIX = "_topix_list.xlsx"  # 日足用
-EXCEL_TICKER_COL = '銘柄コード_yf'     # filtering_list用
+EXCEL_TICKER_COL = '銘柄コード_yf'     # stock_list用
 TOPIX_CODE_COL = 'コード'             # topix_list用
 TIMEZONE_JST = 'Asia/Tokyo'
 BACKUP_DIR = "backups"
@@ -65,7 +65,7 @@ def update_market_data():
                 tickers = [to_ticker(c) for c in df_list[TOPIX_CODE_COL].dropna().unique()]
                 list_name = LIST_FILE_TOPIX
             else:
-                # 5m, 1h の場合は _filtering_list.xlsx を使用
+                # 5m, 1h の場合は _stock_list.xlsx を使用
                 df_list = pd.read_excel(LIST_FILE_FILTERING, engine='openpyxl')
                 tickers = df_list[EXCEL_TICKER_COL].dropna().unique().tolist()
                 list_name = LIST_FILE_FILTERING
