@@ -8,14 +8,13 @@ a02_yfinance_init.py
   過去データをまとめて取得し、以下のCSVファイルを新規作成します。
 
     _5min.csv    : 5分足（直近60日分）
-    _1h.csv      : 1時間足（直近2年分）
     _daily.csv   : 日足（直近3年分）
 
   2回目以降のデータ更新は a03_yfinance_update.py を使用してください。
 
 ■ 取得対象の銘柄
-  - 5分足・1時間足: _stock_list.xlsx の「ティッカーコード」列
-  - 日足          : _topix_list.xlsx の「ティッカーコード」列
+  - 5分足: _stock_list.xlsx の「ティッカーコード」列
+  - 日足 : _topix_list.xlsx の「ティッカーコード」列
   - 日経平均（^N225）はすべての時間足に追加されます
 
 ■ 注意事項
@@ -37,7 +36,7 @@ from datetime import datetime
 # ================================================
 # 設定
 # ================================================
-LIST_FILE_FILTERING = "_stock_list.xlsx"   # 5分足・1時間足データ取得用銘柄リスト
+LIST_FILE_FILTERING = "_stock_list.xlsx"   # 5分足データ取得用銘柄リスト
 LIST_FILE_TOPIX     = "_topix_list.xlsx"        # 日足用銘柄リスト（TOPIX全銘柄）
 EXCEL_TICKER_COL    = 'ティッカーコード'           # stock_list / topix_list 共通の列名
 TOPIX_CODE_COL      = 'ティッカーコード'            # topix_list の列名
@@ -52,7 +51,6 @@ NIKKEI225_TICKER = "^N225"
 #   ※ 5分足は仕様上 "60d" が上限
 INTERVAL_CONFIGS = {
     "5m": {"save_file": "_5min.csv",   "period": "60d"},
-    "1h": {"save_file": "_1h.csv",     "period": "2y"},
     "1d": {"save_file": "_daily.csv",  "period": "3y"},
 }
 
@@ -114,7 +112,7 @@ def fetch_and_format(ticker: str, period: str, interval: str) -> pd.DataFrame:
                 df = df.rename(columns={'Datetime': 'Date'})
                 df['Date'] = pd.to_datetime(df['Date'])
         else:
-            # 5分足・1時間足：Datetime列をUTCとして保持し、JSTも付加
+            # 5分足：Datetime列をUTCとして保持し、JSTも付加
             df = df.rename(columns={'Date': 'Datetime'})
             df['Datetime']     = pd.to_datetime(df['Datetime'], utc=True)
             df['Datetime_JST'] = df['Datetime'].dt.tz_convert(TIMEZONE_JST)

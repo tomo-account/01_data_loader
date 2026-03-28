@@ -4,6 +4,7 @@ import os
 import time
 import shutil
 from datetime import datetime
+from pathlib import Path
 
 # --- 設定 ---
 TIMEZONE_JST = 'Asia/Tokyo'
@@ -19,6 +20,34 @@ FUTURES_TICKERS = {
     "JPY=X": "ドル円",
 }
 
+# ================================================
+# Parquet変換ヘルパー
+# ================================================
+
+def _csv_to_parquet_futures(csv_path: Path, parquet_path: Path) -> bool:
+    """
+    先物・為替CSVをParquetに変換して保存する。
+    5分足: Datetime / Datetime_JST / Ticker / Name / OHLCV
+    日足 : Date / Ticker / Name / OHLCV / chg_pct
+    """
+    if not csv_path.exists():
+        return False
+    df = pd.read_csv(csv_path, encoding="utf_8_sig")
+    if "5min" in csv_path.name:
+        if "Datetime" not in df.columns:
+            return False
+        df["Datetime"] = pd.to_datetime(df["Datetime"], utc=True)
+        df["_date"] = df["Datetime"].dt.tz_convert(TIMEZONE_JST).dt.date.astype(str)
+        df["Ticker"] = df["Ticker"].astype(str).str.strip()
+    else:
+        if "Date" not in df.columns:
+            return False
+        df["Date"] = pd.to_datetime(df["Date"]).dt.strftime("%Y-%m-%d")
+        df["Ticker"] = df["Ticker"].astype(str).str.strip()
+    df.to_parquet(parquet_path, index=False, engine="pyarrow")
+    return True
+
+
 # --- 時間軸設定 ---
 # CSVが存在しない場合は first_run_period で一括取得（初回自動判定）
 # CSVが存在する場合は period で継ぎ足し取得（2回目以降）
@@ -31,9 +60,9 @@ INTERVAL_CONFIGS = {
     },
     "1d": {
         "save_file":        "_daily_futures.csv",
-        "period":           "3d",    # 2回目以降（継ぎ足し）
-        "first_run_period": "2y",    # 初回のみ
-        "update_mode":      "append",
+        "period":           "3y",    # 毎回3年分を上書き取得（a03と同方式）
+        "first_run_period": "3y",    # 初回のみ
+        "update_mode":      "overwrite",
     },
 }
 
@@ -153,13 +182,8 @@ def update_multi_futures():
             key_col = 'Date'
             fixed   = ['Date', 'Ticker', 'Name']
 
-            if mode == "append" and not is_first_run:
-                old_df = pd.read_csv(save_file, encoding='utf_8_sig')
-                final_df = pd.concat([old_df, new_df], ignore_index=True)
-                final_df = final_df.drop_duplicates(subset=[key_col, 'Ticker'], keep='last')
-            else:
-                final_df = new_df
-
+            # overwrite: 取得データで全件上書き（a03の日足と同方式）
+            final_df = new_df
             final_df = final_df.sort_values(['Ticker', key_col]).reset_index(drop=True)
 
             # chg_pct を銘柄ごとに再計算（継ぎ足し後も正確な値にする）
@@ -199,6 +223,22 @@ def update_multi_futures():
     else:
         print("  ⚠️  保存データなし")
     print("=" * 70)
+
+    # Parquet変換（継ぎ足し完了後に実行）
+    print("\n📦 Parquet変換中...")
+    parquet_targets = {
+        "_5min_futures.csv":   "_5min_futures.parquet",
+        "_daily_futures.csv":  "_daily_futures.parquet",
+    }
+    for csv_name, parquet_name in parquet_targets.items():
+        csv_p     = Path(csv_name)
+        parquet_p = Path(parquet_name)
+        if _csv_to_parquet_futures(csv_p, parquet_p):
+            print(f"  ✅ {parquet_name} 変換完了")
+        elif not csv_p.exists():
+            print(f"  ⚠️  {csv_name} が存在しないためスキップ")
+        else:
+            print(f"  ℹ️  {parquet_name} 変換失敗（列構成を確認してください）")
 
 
 if __name__ == "__main__":

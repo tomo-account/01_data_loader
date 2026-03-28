@@ -4,7 +4,6 @@ import os
 # --- 設定 ---
 CSV_FILES = {
     "5分足":   "_5min.csv",
-    "1時間足": "_1h.csv",
     "日足":    "_daily.csv",
 }
 

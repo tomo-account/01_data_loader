@@ -4,12 +4,12 @@ a03_yfinance_update.py
 【定期実行用】yfinanceから株価データを取得してCSVに継ぎ足す
 
 ■ 概要
-  _5min.csv / _1h.csv / _daily.csv に最新データを継ぎ足します。
+  _5min.csv / _daily.csv に最新データを継ぎ足します。
   初回実行は a02_yfinance_init.py を使用してください。
 
 ■ 取得対象の銘柄
-  - 5分足・1時間足: _stock_list.xlsx の「ティッカーコード」列
-  - 日足          : _topix_list.xlsx の「ティッカーコード」列
+  - 5分足: _stock_list.xlsx の「ティッカーコード」列
+  - 日足 : _topix_list.xlsx の「ティッカーコード」列
   - 日経平均（^N225）はすべての時間足に追加されます
 
 ■ 実行方法
@@ -22,6 +22,7 @@ import os
 import time
 import shutil
 from datetime import datetime
+from pathlib import Path
 
 # --- 設定 ---
 LIST_FILE_FILTERING = "_stock_list.xlsx"
@@ -38,18 +39,54 @@ NIKKEI225_TICKER = "^N225"
 
 INTERVAL_CONFIGS = {
     "5m": {"save_file": "_5min.csv", "period": "3d", "update_mode": "append"},
-    "1h": {"save_file": "_1h.csv", "period": "3d", "update_mode": "append"},
-    "1d": {"save_file": "_daily.csv", "period": "1y", "update_mode": "overwrite"}
+    "1d": {"save_file": "_daily.csv", "period": "3d", "update_mode": "overwrite"}
 }
 
+TIMEZONE_JST_STR = "Asia/Tokyo"
+
+# ================================================
+# Parquet変換ヘルパー
+# ================================================
+
+def _csv_to_parquet(csv_path: Path, parquet_path: Path) -> bool:
+    """
+    CSVをParquetに変換して保存する。
+    アプリ側の _build_parquet_if_needed と同じ変換ロジックを使用。
+    """
+    if not csv_path.exists():
+        return False
+    if "5min" in csv_path.name:
+        df = pd.read_csv(csv_path)
+        dt_col = "Datetime_JST" if "Datetime_JST" in df.columns else "Datetime" if "Datetime" in df.columns else None
+        if dt_col is None:
+            return False
+        df["Datetime"] = pd.to_datetime(df[dt_col])
+        if df["Datetime"].dt.tz is None:
+            df["Datetime"] = df["Datetime"].dt.tz_localize(TIMEZONE_JST_STR)
+        else:
+            df["Datetime"] = df["Datetime"].dt.tz_convert(TIMEZONE_JST_STR)
+        df["_date"] = df["Datetime"].dt.date.astype(str)
+        df["Ticker"] = df["Ticker"].astype(str).str.strip()
+        drop_cols = [c for c in ["Datetime_JST"] if c in df.columns]
+        df.drop(columns=drop_cols, inplace=True)
+        df.to_parquet(parquet_path, index=False, engine="pyarrow")
+    else:
+        df = pd.read_csv(csv_path)
+        if "Date" not in df.columns or "Ticker" not in df.columns:
+            return False
+        df["Date"] = pd.to_datetime(df["Date"]).dt.strftime("%Y-%m-%d")
+        df["Ticker"] = df["Ticker"].astype(str).str.strip()
+        df.to_parquet(parquet_path, index=False, engine="pyarrow")
+    return True
+
 def update_market_data():
-    # 1. バックアップ（5mと1hのみ対象）
+    # 1. バックアップ（5mのみ対象）
     if not os.path.exists(BACKUP_DIR): os.makedirs(BACKUP_DIR)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    for interval in ["5m", "1h"]:
+    for interval in ["5m"]:
         f = INTERVAL_CONFIGS[interval]["save_file"]
         if os.path.exists(f): shutil.copy2(f, os.path.join(BACKUP_DIR, f"{f}_bak_{timestamp}.csv"))
-    print(f"✅ 5分足・1時間足のバックアップ完了")
+    print(f"✅ 5分足のバックアップ完了")
 
     execution_summary = []
 
@@ -67,7 +104,7 @@ def update_market_data():
                 tickers = df_list[TOPIX_CODE_COL].dropna().unique().tolist()
                 list_name = LIST_FILE_TOPIX
             else:
-                # 5m, 1h は _stock_list.xlsx の「ティッカーコード」列をそのまま使用
+                # 5m は _stock_list.xlsx の「ティッカーコード」列をそのまま使用
                 df_list = pd.read_excel(LIST_FILE_FILTERING, engine='openpyxl')
                 tickers = df_list[EXCEL_TICKER_COL].dropna().unique().tolist()
                 list_name = LIST_FILE_FILTERING
@@ -159,6 +196,22 @@ def update_market_data():
     for s in execution_summary:
         print(f"{s['interval']:<5} | {s['mode']:<8} | {s['success']:>3}/{s['tickers_count']:<2} | {s['total_rows']:>10,} | {str(s['latest']):<20}")
     print("="*80)
+
+    # 5. Parquet変換（継ぎ足し完了後に実行）
+    print("\n📦 Parquet変換中...")
+    parquet_targets = {
+        "_5min.csv":   "_5min.parquet",
+        "_daily.csv":  "_daily.parquet",
+    }
+    for csv_name, parquet_name in parquet_targets.items():
+        csv_p     = Path(csv_name)
+        parquet_p = Path(parquet_name)
+        if _csv_to_parquet(csv_p, parquet_p):
+            print(f"  ✅ {parquet_name} 変換完了")
+        elif not csv_p.exists():
+            print(f"  ⚠️  {csv_name} が存在しないためスキップ")
+        else:
+            print(f"  ℹ️  {parquet_name} 変換失敗（列構成を確認してください）")
 
 
 if __name__ == "__main__":
