@@ -1,0 +1,34 @@
+# 環境変数・シークレット
+.env
+*.env
+
+# データファイル（data/ 配下の実データは管理対象外）
+data/**/*.parquet
+data/**/*.csv
+data/**/*.json
+data/**/*.zip
+data/**/*.md
+
+# .gitkeep は追跡する
+!data/**/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.mypy_cache/
+.ruff_cache/
+
+# 仮想環境
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db

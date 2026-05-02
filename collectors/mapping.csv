@@ -1,0 +1,264 @@
+﻿xbrl_tag,accounting_standard,category,context_role,context_pattern,json_path,value_type,unit_ref,notes
+tse-ed-t:SecuritiesCode,any,metadata,current,Current{period}Instant,metadata.code,str,—,末尾'0'を除去して4桁化
+tse-ed-t:CompanyName,any,metadata,current,Current{period}Instant,metadata.company_name,str,—,
+tse-ed-t:DocumentName,any,metadata,current,Current{period}Instant,metadata.document_name,str,—,
+tse-ed-t:FilingDate,any,metadata,current,Current{period}Instant,metadata.filing_date,date,—,和暦/全角を ISO 形式に変換
+tse-ed-t:FiscalYearEnd,any,metadata,current,CurrentYearInstant,metadata.fiscal_year_end,date,—,
+tse-ed-t:QuarterlyPeriod,any,metadata,current,Current{period}Instant,metadata.period_type,str,Pure,1/2/3 → Q1/Q2/Q3、欠損は FY
+tse-ed-t:NetSales,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.revenue,int,JPY,priority 1
+tse-ed-t:OperatingRevenues,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.revenue,int,JPY,priority 1
+tse-ed-t:RevenueIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:SalesIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.revenue,int,JPY,priority 3 (alt)
+tse-ed-t:OperatingIncome,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.operating_profit,int,JPY,priority 1
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.operating_profit,int,JPY,priority 1
+tse-ed-t:OrdinaryIncome,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.ordinary_profit,int,JPY,priority 1
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.profit_before_tax,int,JPY,priority 1
+tse-ed-t:ProfitIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.profit,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ComprehensiveIncome,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.comprehensive_income,int,JPY,priority 1
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.comprehensive_income,int,JPY,priority 1
+tse-ed-t:NetIncomePerShare,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.eps,float,JPYPerShares,priority 1
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,current,Current{period}Duration_ConsolidatedMember_ResultMember,performance.current.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:NetSales,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.revenue,int,JPY,priority 1
+tse-ed-t:OperatingRevenues,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.revenue,int,JPY,priority 1
+tse-ed-t:RevenueIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:SalesIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.revenue,int,JPY,priority 3 (alt)
+tse-ed-t:OperatingIncome,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.operating_profit,int,JPY,priority 1
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.operating_profit,int,JPY,priority 1
+tse-ed-t:OrdinaryIncome,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.ordinary_profit,int,JPY,priority 1
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.profit_before_tax,int,JPY,priority 1
+tse-ed-t:ProfitIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.profit,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ComprehensiveIncome,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.comprehensive_income,int,JPY,priority 1
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.comprehensive_income,int,JPY,priority 1
+tse-ed-t:NetIncomePerShare,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.eps,float,JPYPerShares,priority 1
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,prior,Prior{period}Duration_ConsolidatedMember_ResultMember,performance.prior.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:ChangeInNetSales,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.revenue,float,Pure,priority 1
+tse-ed-t:ChangeInOperatingRevenues,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.revenue,float,Pure,priority 2 (alt)
+tse-ed-t:ChangeInNetSalesIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.revenue,float,Pure,priority 1
+tse-ed-t:ChangeInRevenueIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.revenue,float,Pure,priority 2 (alt)
+tse-ed-t:ChangeInSalesIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.revenue,float,Pure,priority 3 (alt)
+tse-ed-t:ChangeInOperatingIncome,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.operating_profit,float,Pure,priority 1
+tse-ed-t:ChangeInOperatingIncomeIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.operating_profit,float,Pure,priority 1
+tse-ed-t:ChangeInOrdinaryIncome,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.ordinary_profit,float,Pure,priority 1
+tse-ed-t:ChangeInProfitBeforeTaxIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.profit_before_tax,float,Pure,priority 1
+tse-ed-t:ChangeInProfitIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.profit,float,Pure,priority 1
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParent,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.profit_attributable_to_owners,float,Pure,priority 1
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParentIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.profit_attributable_to_owners,float,Pure,priority 1
+tse-ed-t:ChangeInComprehensiveIncome,JP,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.comprehensive_income,float,Pure,priority 1
+tse-ed-t:ChangesInTotalComprehensiveIncomeIFRS,IFRS,performance,change_pct,Current{period}Duration_ConsolidatedMember_ResultMember,performance.change_pct.comprehensive_income,float,Pure,priority 1
+tse-ed-t:NetSales,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 1
+tse-ed-t:OperatingRevenues,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 1
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 3 (alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.operating_profit,int,JPY,priority 1
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.operating_profit,int,JPY,priority 1
+tse-ed-t:OrdinaryIncome,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.ordinary_profit,int,JPY,priority 1
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_before_tax,int,JPY,priority 1
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.comprehensive_income,int,JPY,priority 1
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.comprehensive_income,int,JPY,priority 1
+tse-ed-t:NetIncomePerShare,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.eps,float,JPYPerShares,priority 1
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:NetSales,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 1
+tse-ed-t:OperatingRevenues,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 1
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 3 (alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.operating_profit,int,JPY,priority 1
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.operating_profit,int,JPY,priority 1
+tse-ed-t:OrdinaryIncome,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.ordinary_profit,int,JPY,priority 1
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_before_tax,int,JPY,priority 1
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.comprehensive_income,int,JPY,priority 1
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.comprehensive_income,int,JPY,priority 1
+tse-ed-t:NetIncomePerShare,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.eps,float,JPYPerShares,priority 1
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast_lower,CurrentYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:NetSales,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 1
+tse-ed-t:OperatingRevenues,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 1
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 2 (alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 3 (alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.operating_profit,int,JPY,priority 1
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.operating_profit,int,JPY,priority 1
+tse-ed-t:OrdinaryIncome,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.ordinary_profit,int,JPY,priority 1
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_before_tax,int,JPY,priority 1
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_attributable_to_owners,int,JPY,priority 1
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.comprehensive_income,int,JPY,priority 1
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.comprehensive_income,int,JPY,priority 1
+tse-ed-t:NetIncomePerShare,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.eps,float,JPYPerShares,priority 1
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast_upper,CurrentYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.diluted_eps,float,JPYPerShares,priority 1
+tse-ed-t:ChangeInNetSales,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 1
+tse-ed-t:ChangeInOperatingRevenues,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 2 (alt)
+tse-ed-t:ChangeInNetSalesIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 1
+tse-ed-t:ChangeInRevenueIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 2 (alt)
+tse-ed-t:ChangeInSalesIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 3 (alt)
+tse-ed-t:ChangeInOperatingIncome,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.operating_profit,float,Pure,priority 1
+tse-ed-t:ChangeInOperatingIncomeIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.operating_profit,float,Pure,priority 1
+tse-ed-t:ChangeInOrdinaryIncome,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.ordinary_profit,float,Pure,priority 1
+tse-ed-t:ChangeInProfitBeforeTaxIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_before_tax,float,Pure,priority 1
+tse-ed-t:ChangeInProfitIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit,float,Pure,priority 1
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParent,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_attributable_to_owners,float,Pure,priority 1
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_attributable_to_owners,float,Pure,priority 1
+tse-ed-t:ChangeInComprehensiveIncome,JP,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.comprehensive_income,float,Pure,priority 1
+tse-ed-t:ChangesInTotalComprehensiveIncomeIFRS,IFRS,performance,forecast_change_pct,CurrentYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.comprehensive_income,float,Pure,priority 1
+tse-ed-t:TotalAssets,JP,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.total_assets,int,JPY,
+tse-ed-t:TotalAssetsIFRS,IFRS,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.total_assets,int,JPY,
+tse-ed-t:TotalAssets,JP,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.total_assets,int,JPY,
+tse-ed-t:TotalAssetsIFRS,IFRS,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.total_assets,int,JPY,
+tse-ed-t:NetAssets,JP,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.net_assets,int,JPY,
+tse-ed-t:TotalEquityIFRS,IFRS,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.net_assets,int,JPY,
+tse-ed-t:NetAssets,JP,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.net_assets,int,JPY,
+tse-ed-t:TotalEquityIFRS,IFRS,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.net_assets,int,JPY,
+tse-ed-t:OwnersEquity,JP,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.owners_equity,int,JPY,
+tse-ed-t:EquityAttributableToOwnersOfParentIFRS,IFRS,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.owners_equity,int,JPY,
+tse-ed-t:OwnersEquity,JP,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.owners_equity,int,JPY,
+tse-ed-t:EquityAttributableToOwnersOfParentIFRS,IFRS,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.owners_equity,int,JPY,
+tse-ed-t:CapitalAdequacyRatio,JP,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.equity_to_assets_ratio,float,Pure,
+tse-ed-t:EquityAttributableToOwnersOfParentToTotalAssetsRatioIFRS,IFRS,balance_sheet,current,Current{period}Instant_ConsolidatedMember_ResultMember,balance_sheet.current.equity_to_assets_ratio,float,Pure,
+tse-ed-t:CapitalAdequacyRatio,JP,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.equity_to_assets_ratio,float,Pure,
+tse-ed-t:EquityAttributableToOwnersOfParentToTotalAssetsRatioIFRS,IFRS,balance_sheet,prior_year_end,PriorYearInstant_ConsolidatedMember_ResultMember,balance_sheet.prior_year_end.equity_to_assets_ratio,float,Pure,
+tse-ed-t:DividendPerShare,any,dividend,prior_firstquarter_result,PriorYearDuration_FirstQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_prior.q1,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,prior_secondquarter_result,PriorYearDuration_SecondQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_prior.q2,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,prior_thirdquarter_result,PriorYearDuration_ThirdQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_prior.q3,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,prior_yearend_result,PriorYearDuration_YearEndMember_NonConsolidatedMember_ResultMember,dividend.actual_prior.year_end,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,prior_annual_result,PriorYearDuration_AnnualMember_NonConsolidatedMember_ResultMember,dividend.actual_prior.annual,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_firstquarter_result,CurrentYearDuration_FirstQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_current.q1,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_secondquarter_result,CurrentYearDuration_SecondQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_current.q2,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_thirdquarter_result,CurrentYearDuration_ThirdQuarterMember_NonConsolidatedMember_ResultMember,dividend.actual_current.q3,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_yearend_result,CurrentYearDuration_YearEndMember_NonConsolidatedMember_ResultMember,dividend.actual_current.year_end,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_annual_result,CurrentYearDuration_AnnualMember_NonConsolidatedMember_ResultMember,dividend.actual_current.annual,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_yearend_forecast,CurrentYearDuration_YearEndMember_NonConsolidatedMember_ForecastMember,dividend.forecast_current.year_end,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_yearend_lower,CurrentYearDuration_YearEndMember_NonConsolidatedMember_LowerMember,dividend.forecast_current.lower.year_end,float,JPYPerShares,レンジ予想時のみ
+tse-ed-t:DividendPerShare,any,dividend,current_yearend_upper,CurrentYearDuration_YearEndMember_NonConsolidatedMember_UpperMember,dividend.forecast_current.upper.year_end,float,JPYPerShares,レンジ予想時のみ
+tse-ed-t:DividendPerShare,any,dividend,current_annual_forecast,CurrentYearDuration_AnnualMember_NonConsolidatedMember_ForecastMember,dividend.forecast_current.annual,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_annual_lower,CurrentYearDuration_AnnualMember_NonConsolidatedMember_LowerMember,dividend.forecast_current.lower.annual,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,current_annual_upper,CurrentYearDuration_AnnualMember_NonConsolidatedMember_UpperMember,dividend.forecast_current.upper.annual,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,next_yearend_forecast,NextYearDuration_YearEndMember_NonConsolidatedMember_ForecastMember,dividend.forecast_next.year_end,float,JPYPerShares,
+tse-ed-t:DividendPerShare,any,dividend,next_annual_forecast,NextYearDuration_AnnualMember_NonConsolidatedMember_ForecastMember,dividend.forecast_next.annual,float,JPYPerShares,
+tse-ed-t:NumberOfIssuedAndOutstandingSharesAtTheEndOfFiscalYearIncludingTreasuryStock,any,shares,current,Current{period}Instant_NonConsolidatedMember_ResultMember,shares.issued_at_period_end,int,Shares,
+tse-ed-t:NumberOfIssuedAndOutstandingSharesAtTheEndOfFiscalYearIncludingTreasuryStock,any,shares,prior_year_end,PriorYearInstant_NonConsolidatedMember_ResultMember,shares.issued_at_prior_year_end,int,Shares,
+tse-ed-t:NumberOfTreasuryStockAtTheEndOfFiscalYear,any,shares,current,Current{period}Instant_NonConsolidatedMember_ResultMember,shares.treasury_at_period_end,int,Shares,
+tse-ed-t:NumberOfTreasuryStockAtTheEndOfFiscalYear,any,shares,prior_year_end,PriorYearInstant_NonConsolidatedMember_ResultMember,shares.treasury_at_prior_year_end,int,Shares,
+tse-ed-t:AverageNumberOfShares,any,shares,current_duration,Current{period}Duration_NonConsolidatedMember_ResultMember,shares.average_during_period,int,Shares,
+tse-ed-t:AverageNumberOfShares,any,shares,prior_duration,Prior{period}Duration_NonConsolidatedMember_ResultMember,shares.average_prior,int,Shares,
+tse-ed-t:NumberOfSubsidiariesNewlyConsolidatedIFRS,IFRS,consolidation_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,consolidation_changes.newly_consolidated_count,int,NumberOfCompanies,
+tse-ed-t:NumberOfSubsidiariesExcludedFromConsolidationIFRS,IFRS,consolidation_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,consolidation_changes.excluded_count,int,NumberOfCompanies,
+tse-ed-t:NameOfSubsidiariesNewlyConsolidatedIFRS,IFRS,consolidation_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,consolidation_changes.newly_consolidated_names,str,—,
+tse-ed-t:NameOfSubsidiariesExcludedFromConsolidationIFRS,IFRS,consolidation_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,consolidation_changes.excluded_names,str,—,
+tse-ed-t:CorrectionOfDividendForecastInThisQuarter,any,corrections,current,CurrentYearDuration_AnnualMember_NonConsolidatedMember_ResultMember,corrections.dividend_forecast_corrected,bool,—,有→true 無→false
+tse-ed-t:CorrectionOfConsolidatedFinancialForecastInThisQuarter,any,corrections,current,CurrentYearDuration_ConsolidatedMember_ForecastMember,corrections.earnings_forecast_corrected,bool,—,有→true 無→false
+tse-ed-t:ChangesBasedOnRevisionsOfAccountingStandard,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.based_on_revisions_of_standard,bool,—,有→true 無→false
+tse-ed-t:ChangesOtherThanOnesBasedOnRevisionsOfAccountingStandard,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.other_than_revisions_of_standard,bool,—,有→true 無→false
+tse-ed-t:ChangesInAccountingPoliciesRequiredByIFRSIFRS,IFRS,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.required_by_ifrs,bool,—,有→true 無→false
+tse-ed-t:ChangesInAccountingPoliciesOtherThanIFRSRequirementsIFRS,IFRS,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.other_than_required_by_ifrs,bool,—,有→true 無→false
+tse-ed-t:ChangesInAccountingEstimates,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.estimates_changed,bool,—,有→true 無→false
+tse-ed-t:ChangesInAccountingEstimatesIFRS,IFRS,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.estimates_changed,bool,—,JP/IFRSで同フィールド共有
+tse-ed-t:RetrospectiveRestatement,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.retrospective_restatement,bool,—,有→true 無→false
+tse-ed-t:SignificantChangesInTheScopeOfConsolidationDuringThePeriod,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.significant_changes_in_consolidation_scope,bool,—,有→true 無→false
+tse-ed-t:SignificantChangesInTheScopeOfConsolidationDuringThePeriodIFRS,IFRS,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.significant_changes_in_consolidation_scope,bool,—,JP/IFRSで同フィールド共有
+tse-ed-t:ApplyingOfSpecificAccountingOfTheConsolidatedQuarterlyFinancialStatements,JP,accounting_changes,current,Current{period}Duration_ConsolidatedMember_ResultMember,accounting_changes.specific_accounting_applied,bool,—,有→true 無→false
+tse-ed-t:ReviewOfAttachedConsolidatedQuarterlyFinancialStatementsByACertifiedPublicAccountantOrAnAuditFirm,any,audit,current,Current{period}Duration,audit.reviewed_by_audit_firm,bool,—,有→true 無→false
+tse-ed-t:NoteToOperatingResults,any,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.operating_results,str,—,
+tse-ed-t:NoteToFinancialPositions,any,notes,current,Current{period}Instant_ConsolidatedMember_ResultMember,notes.financial_positions,str,—,
+tse-ed-t:NoteToConsolidatedFinancialResults,any,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.consolidated_financial_results,str,—,
+tse-ed-t:NoteToForecasts,any,notes,current,CurrentYearDuration_ConsolidatedMember_ForecastMember,notes.forecasts,str,—,
+tse-ed-t:NoteToDividends,any,notes,current,Current{period}Duration_AnnualMember_NonConsolidatedMember_ResultMember,notes.dividends,str,—,
+tse-ed-t:NoteToFractionProcessingMethod,any,notes,current,Current{period}Instant,notes.fraction_processing_method,str,—,
+tse-ed-t:NoteToNumberOfIssuedAndOutstandingSharesCommonStock,any,notes,current,Current{period}Instant_NonConsolidatedMember_ResultMember,notes.shares,str,—,
+tse-ed-t:NoteToSignificantChangesInTheScopeOfConsolidationDuringThePeriod,any,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.scope_of_consolidation,str,—,
+tse-ed-t:NoteToChangesInAccountingPoliciesAccountingEstimatesAndRetrospectiveRestatementQuarterlyConsolidated,JP,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.accounting_policy_changes,str,—,
+tse-ed-t:NoteToChangesInAccountingPoliciesAndAccountingEstimatesIFRS,IFRS,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.accounting_policy_changes,str,—,JP/IFRSで同フィールド共有
+tse-ed-t:NoteToApplyingOfSpecificAccountingOfTheConsolidatedQuarterlyFinancialStatements,JP,notes,current,Current{period}Duration_ConsolidatedMember_ResultMember,notes.specific_accounting_quarterly,str,—,
+tse-ed-t:NotesForUsingForecastedInformationAndOthers,any,notes,current,CurrentYearDuration,notes.forecast_disclaimer,str,—,
+tse-ed-t:NetSales,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingRevenues,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.revenue,int,JPY,priority 3 (FY-next alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OrdinaryIncome,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.ordinary_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_before_tax,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:NetIncomePerShare,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:NetSales,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingRevenues,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.revenue,int,JPY,priority 3 (FY-next alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OrdinaryIncome,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.ordinary_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_before_tax,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:NetIncomePerShare,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast_lower,NextYearDuration_ConsolidatedMember_LowerMember,performance.forecast.lower.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:NetSales,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingRevenues,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:NetSalesIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 1 (FY-next)
+tse-ed-t:RevenueIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 2 (FY-next alt)
+tse-ed-t:SalesIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.revenue,int,JPY,priority 3 (FY-next alt)
+tse-ed-t:OperatingIncome,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OperatingIncomeIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.operating_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:OrdinaryIncome,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.ordinary_profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitBeforeTaxIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_before_tax,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParent,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.profit_attributable_to_owners,int,JPY,priority 1 (FY-next)
+tse-ed-t:ComprehensiveIncome,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:TotalComprehensiveIncomeIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.comprehensive_income,int,JPY,priority 1 (FY-next)
+tse-ed-t:NetIncomePerShare,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:BasicEarningsPerShareIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedNetIncomePerShare,JP,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:DilutedEarningsPerShareIFRS,IFRS,performance,forecast_upper,NextYearDuration_ConsolidatedMember_UpperMember,performance.forecast.upper.diluted_eps,float,JPYPerShares,priority 1 (FY-next)
+tse-ed-t:ChangeInNetSales,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInOperatingRevenues,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 2 (FY-next alt)
+tse-ed-t:ChangeInNetSalesIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInRevenueIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 2 (FY-next alt)
+tse-ed-t:ChangeInSalesIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.revenue,float,Pure,priority 3 (FY-next alt)
+tse-ed-t:ChangeInOperatingIncome,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.operating_profit,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInOperatingIncomeIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.operating_profit,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInOrdinaryIncome,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.ordinary_profit,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInProfitBeforeTaxIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_before_tax,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInProfitIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParent,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_attributable_to_owners,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInProfitAttributableToOwnersOfParentIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.profit_attributable_to_owners,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangeInComprehensiveIncome,JP,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.comprehensive_income,float,Pure,priority 1 (FY-next)
+tse-ed-t:ChangesInTotalComprehensiveIncomeIFRS,IFRS,performance,forecast_change_pct,NextYearDuration_ConsolidatedMember_ForecastMember,performance.forecast_change_pct.comprehensive_income,float,Pure,priority 1 (FY-next)
+tse-ed-t:CorrectionOfConsolidatedFinancialForecastInThisQuarter,any,corrections,current,NextYearDuration_ConsolidatedMember_ForecastMember,corrections.earnings_forecast_corrected,bool,—,有→true 無→false
+tse-ed-t:NoteToForecasts,any,notes,current,NextYearDuration_ConsolidatedMember_ForecastMember,notes.forecasts,str,—,
