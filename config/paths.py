@@ -15,10 +15,12 @@ PRICES_STOCKS_5MIN  = DATA / "prices" / "stocks" / "5min"
 PRICES_MACRO_DAILY  = DATA / "prices" / "macro" / "daily"
 PRICES_MACRO_5MIN   = DATA / "prices" / "macro" / "5min"
 
-NEWS       = DATA / "news"
-NEWS_RSS   = NEWS / "rss"
-NEWS_TDNET = NEWS / "tdnet"
-FINANCIALS = DATA / "financials"
+NEWS                 = DATA / "news"
+NEWS_RSS             = NEWS / "rss"
+NEWS_TDNET           = NEWS / "tdnet"
+NEWS_KESSAN          = NEWS / "kessan"           # J-Quants 決算短信カレンダー（過去実績）
+NEWS_KESSAN_SCHEDULE = NEWS / "kessan_schedule"  # J-Quants 決算発表予定（将来スケジュール）
+FINANCIALS           = DATA / "financials"
 
 # 決算短信 XBRL ZIP / JSON / Markdown（xbrl-converter 出力）
 STATEMENTS_ZIP = DATA / "statements_zip"
