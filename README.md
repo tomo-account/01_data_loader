@@ -16,6 +16,8 @@ Qiita 解説記事：[Streamlitで株価分析アプリを作ってみよう ②
 | 決算短信（XBRL → JSON） | TDnet | `data/statements/` |
 | 適時開示 | TDnet | `data/news/tdnet/` |
 | ニュース | 各メディア RSS | `data/news/rss/` |
+| 決算短信カレンダー（発表日時・過去実績） | J-Quants API | `data/news/kessan/` |
+| 決算発表予定（翌営業日スケジュール） | J-Quants API | `data/news/kessan_schedule/` |
 
 ---
 
@@ -29,7 +31,7 @@ pip install yfinance pandas pyarrow requests feedparser python-dotenv streamlit
 
 ### 2. 環境変数の設定
 
-財務データの取得には EDINET DB API のキーが必要です。
+財務データ・決算発表スケジュールの取得には API キーが必要です。
 
 ```bash
 cp .env.example .env
@@ -39,9 +41,11 @@ cp .env.example .env
 
 ```env
 EDINETDB_API_KEY=your_api_key_here
+JQUANTS_API_KEY=your_jquants_api_key_here
 ```
 
-EDINET DB API キーの取得：https://edinet-db.com/
+- EDINET DB API キーの取得：https://edinet-db.com/
+- J-Quants API キーの取得：https://jpx-jquants.com/（ダッシュボード → API キー管理）
 
 ### 3. 銘柄リストの作成
 
@@ -86,6 +90,12 @@ python collectors/xbrl_to_json.py --all
 # 適時開示・ニュース
 python collectors/fetch_news.py --date 2026-05-01 --mode tdnet
 python collectors/fetch_news.py --date 2026-05-01 --mode rss
+
+# 決算短信カレンダー（過去実績）
+python collectors/fetch_kessan_calendar.py --mode history --start-date 2024-03-01 --end-date 2025-05-02
+
+# 決算発表予定（翌営業日）
+python collectors/fetch_kessan_calendar.py --mode future
 ```
 
 ### 株式分割の補正
@@ -113,6 +123,7 @@ python collectors/fix_split_5min.py --code 8001 --split-date 2026-01-15 --split 
 │   ├── fetch_prices_macro.py       マクロ指標
 │   ├── fetch_financials.py         財務データ（EDINET DB API）
 │   ├── fetch_news.py               ニュース・適時開示
+│   ├── fetch_kessan_calendar.py    決算短信カレンダー・発表予定（J-Quants API）
 │   ├── fetch_statements.py         決算短信 XBRL ZIP 取得
 │   ├── xbrl_to_json.py             XBRL → JSON 変換
 │   ├── mapping.csv                 XBRL タグマッピング定義
@@ -137,6 +148,8 @@ python collectors/fix_split_5min.py --code 8001 --split-date 2026-01-15 --split 
 │   ├── financials/                 財務データ CSV
 │   ├── news/tdnet/                 適時開示 CSV
 │   ├── news/rss/                   ニュース CSV
+│   ├── news/kessan/                決算短信カレンダー CSV（日別）
+│   ├── news/kessan_schedule/       決算発表予定 CSV（latest.csv）
 │   ├── statements/                 決算短信 JSON
 │   └── statements_zip/             決算短信 XBRL ZIP
 │
@@ -150,4 +163,5 @@ python collectors/fix_split_5min.py --code 8001 --split-date 2026-01-15 --split 
 
 - `yfinance` は非公式ライブラリです。Yahoo Finance の仕様変更により取得できなくなる場合があります。
 - EDINET DB API の無料プランは **100 calls/day** の上限があります。
+- J-Quants API の無料プランは過去データ約15ヶ月分、決算発表予定は翌営業日分・3月9月決算企業のみが対象です。
 - 取得したデータは個人利用の範囲でご使用ください。
