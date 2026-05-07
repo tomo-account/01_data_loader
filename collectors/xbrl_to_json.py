@@ -1,9 +1,13 @@
 """
-xbrl_to_json.py — 決算短信 IXBRL を統一スキーマ JSON に変換する。
+xbrl_parser.converter — 決算短信 IXBRL を統一スキーマ JSON に変換する。
 
-使い方:
-    python xbrl_to_json.py <input>           # 入力: ZIP / ディレクトリ / IXBRL HTML
-    python xbrl_to_json.py <input> --output <dir>
+使い方（CLI）:
+    xbrl-to-json <input>                  # 入力: ZIP / ディレクトリ / IXBRL HTML
+    xbrl-to-json <input> --output <dir>
+
+使い方（API）:
+    from xbrl_parser import convert
+    out_path = convert(Path("statement.zip"), out_dir=Path("./statements"))
 """
 from __future__ import annotations
 import argparse
@@ -17,6 +21,7 @@ import zipfile
 from pathlib import Path
 from collections import defaultdict
 from datetime import date, datetime
+from typing import Any
 
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
@@ -24,7 +29,7 @@ warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 HERE             = Path(__file__).resolve().parent
 MAPPING_CSV      = HERE / "mapping.csv"
-DEFAULT_OUT_DIR  = Path(r"C:\stock_analysis\data\statements")
+DEFAULT_OUT_DIR  = Path("statements")  # CWD 相対。呼び出し側で out_dir を明示推奨
 PARSER_VERSION   = "0.2.0"
 
 
@@ -545,7 +550,7 @@ def _to_halfwidth(s: str) -> str:
     return unicodedata.normalize("NFKC", s)
 
 
-def normalize_value(raw: str, value_type: str, scale: str, unit: str, sign: str = "") -> any:
+def normalize_value(raw: str, value_type: str, scale: str, unit: str, sign: str = "") -> Any:
     """文字列値を Python の型に変換。scale 適用も行う。"""
     if raw is None or raw == "":
         return None
@@ -596,7 +601,7 @@ def normalize_value(raw: str, value_type: str, scale: str, unit: str, sign: str 
 # JSON 構築
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _set_nested(d: dict, path: str, value: any) -> None:
+def _set_nested(d: dict, path: str, value: Any) -> None:
     """'a.b.c' のようなドットパスで nested dict にセット。既存 None は上書き。"""
     parts = path.split(".")
     cur = d
