@@ -25,7 +25,7 @@ warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 HERE             = Path(__file__).resolve().parent
 MAPPING_CSV      = HERE / "mapping.csv"
 DEFAULT_OUT_DIR  = Path(r"C:\stock_analysis\data\statements")
-PARSER_VERSION   = "0.1.0"
+PARSER_VERSION   = "0.2.0"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -272,19 +272,35 @@ _SEGMENT_NUMERIC_TAGS = {
     "jpcrp_cor:TransactionsWithOtherSegments": "intersegment_revenue",
     "jppfs_cor:NetSales":                       "total_revenue",
     "jppfs_cor:OperatingIncome":                "operating_income",
+    "jppfs_cor:OrdinaryIncome":                 "ordinary_income",         # 経常利益（一部の食品・素材銘柄が segment 利益として採用）
     "jpcrp_cor:EquityInEarningsLossesOfAffiliates": "equity_method_income",
+    "jppfs_cor:ImpairmentLossEL":               "impairment_loss",
+    # 日本基準（銀行業特化）
+    "jppfs_cor:OrdinaryIncomeBNK":              "ordinary_income_bnk",
+    "jppfs_cor:InterestIncomeOIBNK":            "interest_income_bnk",
     # IFRS（jpigp）
     "jpigp_cor:SalesToExternalCustomersIFRS":   "external_revenue",
     "jpigp_cor:IntersegmentSalesIFRS":          "intersegment_revenue",
+    "jpigp_cor:IntersegmentRevenueIFRS":        "intersegment_revenue",
+    "jpigp_cor:IntersegmentRevenue2IFRS":       "intersegment_revenue",
     "jpigp_cor:NetSalesIFRS":                    "total_revenue",
     "jpigp_cor:Revenue2IFRS":                    "total_revenue",          # 8058 三菱商事系
+    "jpigp_cor:RevenueIFRS":                     "total_revenue",
+    "jpigp_cor:RevenueFromExternalCustomersIFRS":  "external_revenue",
+    "jpigp_cor:RevenueFromExternalCustomers2IFRS": "external_revenue",
     "jpigp_cor:OperatingProfitLossIFRS":        "operating_income",
+    "jpigp_cor:SegmentProfitLossIFRS":          "operating_income",        # IFRS で SegmentProfit 表記の銘柄
     "jpigp_cor:ShareOfProfitLossOfInvestmentsAccountedForUsingEquityMethodIFRS": "equity_method_income",
     "jpigp_cor:GrossProfitIFRS":                "gross_profit",
     "jpigp_cor:ProfitLossAttributableToOwnersOfParentIFRS": "profit_attributable_to_owners",
     "jpigp_cor:ProfitLossBeforeTaxIFRS":        "profit_before_tax",
     "jpigp_cor:FinanceIncomeIFRS":              "finance_income",
     "jpigp_cor:FinanceCostsIFRS":               "finance_costs",
+    "jpigp_cor:FinanceIncomeAndExpensesNetIFRS":"finance_income_net",
+    "jpigp_cor:OtherIncomeIFRS":                "other_income",
+    "jpigp_cor:OtherIncomeAndExpensesNetIFRS":  "other_income_net",
+    "jpigp_cor:ImpairmentLossesPLIFRS":         "impairment_loss",
+    "jpigp_cor:ForeignExchangeGainLossIFRS":    "fx_gain_loss",
     "jpigp_cor:AssetsIFRS":                     "assets",
 }
 
@@ -322,13 +338,35 @@ def _segment_member_key(member: str) -> tuple[str, str] | None:
 
 
 def extract_segments(contexts: dict, facts: list[dict], labels: dict[str, str]) -> dict:
-    """セグメント情報を抽出して JSON ブロックを返す。"""
-    # 期間種別判定: Prior1YTDDuration / CurrentYTDDuration を採用
+    """セグメント情報を抽出して JSON ブロックを返す。
+
+    contextRef のプレフィックスは決算種別ごとに異なる:
+      - Q1〜Q3 累計: CurrentYTDDuration / Prior1YTDDuration
+      - FY  通期:   CurrentYearDuration / Prior1YearDuration
+      - Q2 中間:    CurrentSemiAnnualDuration / Prior1SemiAnnualDuration
+                    または CurrentAccumulatedQ2Duration / Prior1AccumulatedQ2Duration
+    どれが使われるかは提出企業・タクソノミ世代に依存するため網羅的にマッピング。
+    """
     PERIOD_PREFIXES = {
-        "Prior1YTDDuration_":   "prior",
-        "CurrentYTDDuration_":  "current",
+        # 四半期累計（YTD）— Q1, Q3 とごく一部の Q2 で使われる
+        "Prior1YTDDuration_":              "prior",
+        "CurrentYTDDuration_":             "current",
+        # 通期（FY）
+        "Prior1YearDuration_":             "prior",
+        "CurrentYearDuration_":            "current",
+        # 中間（Q2）半期表記
+        "Prior1SemiAnnualDuration_":       "prior",
+        "CurrentSemiAnnualDuration_":      "current",
+        # 中間（Q2）累計表記
+        "Prior1AccumulatedQ2Duration_":    "prior",
+        "CurrentAccumulatedQ2Duration_":   "current",
     }
-    BARE_CONTEXTS = {"Prior1YTDDuration", "CurrentYTDDuration"}
+    BARE_CONTEXTS = {
+        "Prior1YTDDuration", "CurrentYTDDuration",
+        "Prior1YearDuration", "CurrentYearDuration",
+        "Prior1SemiAnnualDuration", "CurrentSemiAnnualDuration",
+        "Prior1AccumulatedQ2Duration", "CurrentAccumulatedQ2Duration",
+    }
 
     # データ収集: segments[period][seg_key][field] = value
     segments_data: dict[str, dict[str, dict]] = {"current": {}, "prior": {}}
