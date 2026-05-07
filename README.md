@@ -2,7 +2,7 @@
 
 株価分析アプリ向けのデータ取得ツールです。株価・財務・決算短信・ニュースを無料APIで取得し、ローカルに保存します。Streamlit でUIを提供しています。
 
-Qiita 解説記事：[Streamlitで株価分析アプリを作ってみよう ②（データ取得編）](#)
+Qiita 解説記事：[Streamlitで株価分析アプリを作ってみよう ②（データ取得編）](https://qiita.com/tomo_account/items/3ebfbe9bc00d5f32a7a5)
 
 ---
 
@@ -45,7 +45,7 @@ JQUANTS_API_KEY=your_jquants_api_key_here
 ```
 
 - EDINET DB API キーの取得：https://edinet-db.com/
-- J-Quants API キーの取得：https://jpx-jquants.com/（ダッシュボード → API キー管理）
+- J-Quants API キーの取得：https://jpx-jquants.com/
 
 ### 3. 銘柄リストの作成
 
@@ -81,11 +81,11 @@ python collectors/fetch_prices_macro.py
 # 財務データ
 python collectors/fetch_financials.py
 
-# 決算短信 XBRL 取得
+# 決算短信 XBRL 取得 + JSON 変換（一括）
 python collectors/fetch_statements.py --date 2026-05-01
 
-# 決算短信 JSON 変換
-python collectors/xbrl_to_json.py --all
+# 既存 ZIP を個別に再変換したい場合
+python collectors/xbrl_to_json.py data/statements_zip/7203/XXXXXXXXXX.zip
 
 # 適時開示・ニュース
 python collectors/fetch_news.py --date 2026-05-01 --mode tdnet
@@ -161,7 +161,24 @@ python collectors/fix_split_5min.py --code 8001 --split-date 2026-01-15 --split 
 
 ## 注意事項
 
-- `yfinance` は非公式ライブラリです。Yahoo Finance の仕様変更により取得できなくなる場合があります。
+### yfinance / Yahoo! Finance
+
+- `yfinance` は非公式ライブラリです。Yahoo! Finance の仕様変更により予告なく動作しなくなる場合があります。
+- 利用にあたっては Yahoo! の規約を遵守してください。
+  - [Yahoo! Finance Terms of Service](https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html)
+  - [Yahoo! Developer API Terms of Use](https://policies.yahoo.com/us/en/yahoo/terms/product-atos/apiforydn/index.htm)
+  - [Yahoo! 権利関係ページ](https://legal.yahoo.com/us/en/yahoo/permissions/requests/index.html)
+- 大量銘柄の連続取得はサーバー負荷になります。`SLEEP_TIME` を適切に設定してください。
+- 取得データのタイムゾーンは UTC です。日本時間は `Datetime_JST` 列に変換済みです。
+
+### API 利用上の制限
+
 - EDINET DB API の無料プランは **100 calls/day** の上限があります。
 - J-Quants API の無料プランは過去データ約15ヶ月分、決算発表予定は翌営業日分・3月9月決算企業のみが対象です。
-- 取得したデータは個人利用の範囲でご使用ください。
+- 短時間での大量取得はサーバーに負担がかかります。各 API のレート制限を守り、過度なリクエストは避けてください。
+
+### 免責事項
+
+- 本ツールは個人利用および学習を目的としたものであり、投資勧誘を目的としたものではありません。
+- 取得データの正確性・即時性を保証しません。投資判断に使用する場合は自己責任でお願いします。
+- 本ツールの利用により生じたいかなる損害についても、制作者は一切の責任を負いません。
