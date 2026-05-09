@@ -11,7 +11,7 @@ category:
 RSS_SOURCES: list[dict] = [
     # ── 日本 ────────────────────────────────────────
     # TDnet（東証適時開示）は RSS 非対応のためスクレイピング対応が必要
-    # fetch_news.py 内で個別実装
+    # fetch_tdnet.py 内で個別実装
     {
         "label":    "NHK経済",
         "url":      "https://www3.nhk.or.jp/rss/news/cat3.xml",

@@ -31,11 +31,11 @@ def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def fetch_daily(ticker: str, code: str) -> None:
-    """3年分の日足を取得して上書き保存（OHLCV）"""
+def fetch_daily(ticker: str, code: str, daily_years: int = 3) -> None:
+    """指定年数分の日足を取得して上書き保存（OHLCV）"""
     # 市場終了後（16時以降）に実行する前提。end は exclusive なので +1日で当日確定データを含める
     end   = datetime.date.today() + datetime.timedelta(days=1)
-    start = datetime.date.today() - datetime.timedelta(days=365 * 3)
+    start = datetime.date.today() - datetime.timedelta(days=365 * daily_years)
     df = yf.download(ticker, start=start.isoformat(), end=end.isoformat(),
                      interval="1d", auto_adjust=True, progress=False)
     if df.empty:
@@ -111,6 +111,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="個別銘柄株価取得")
     parser.add_argument("--fivemin-days", type=int, default=FIVEMIN_MAX_DAYS,
                         help=f"5分足の取得日数（最大 {FIVEMIN_MAX_DAYS}、デフォルト {FIVEMIN_MAX_DAYS}）")
+    parser.add_argument("--daily-years", type=int, default=3,
+                        help="日足の取得年数（デフォルト 3）")
     args = parser.parse_args()
 
     targets = load_price_targets()
@@ -119,7 +121,7 @@ def main() -> None:
         code   = str(row["コード"])
         ticker = str(row["ティッカーコード"])
         print(f"[{i+1}/{total}] {code} {row['銘柄']} ({ticker})")
-        fetch_daily(ticker, code)
+        fetch_daily(ticker, code, daily_years=args.daily_years)
         fetch_5min(ticker, code, fivemin_days=args.fivemin_days)
     print("個別銘柄 完了")
 
