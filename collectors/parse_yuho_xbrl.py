@@ -88,6 +88,30 @@ _SUMMARY_FIELDS: dict[str, str] = {
     "jpcrp_cor:OperatingProfitLossSummaryOfBusinessResults":                           "operating_income",
     "jpcrp_cor:ProfitBeforeTaxSummaryOfBusinessResults":                               "profit_before_tax",
     "jpcrp_cor:ProfitLossSummaryOfBusinessResults":                                    "net_income",
+    # ── 主要財務諸表（Current/Prior1 のみ） ─────────────────────────────────
+    # 石油・ガス業界タクソノミー (jpigp_cor) — ENEOS・出光・コスモ等
+    "jpigp_cor:OperatingProfitLossIFRS":              "operating_income",
+    "jpigp_cor:GrossProfitIFRS":                      "gross_profit",
+    "jpigp_cor:IncomeTaxExpenseIFRS":                 "income_tax_expense",
+    "jpigp_cor:BondsAndBorrowingsCLIFRS":             "interest_bearing_debt_current",
+    "jpigp_cor:BondsAndBorrowingsNCLIFRS":            "interest_bearing_debt_noncurrent",
+    # 汎用 IFRS（総合商社・資源会社等）— 順次拡張予定
+    "ifrs-full:OperatingProfit":                      "operating_income",
+    "ifrs-full:GrossProfit":                          "gross_profit",
+    "ifrs-full:IncomeTaxExpense":                     "income_tax_expense",
+    "ifrs-full:CurrentBorrowings":                    "interest_bearing_debt_current",
+    "ifrs-full:NoncurrentBorrowings":                 "interest_bearing_debt_noncurrent",
+    # 総合商社 IFRS — 営業利益要素なし。粗利・販管費から計算するために抽出
+    "jpigp_cor:SellingGeneralAndAdministrativeExpensesIFRS": "sga_expense",
+    "jpigp_cor:ProfitLossBeforeTaxIFRS":              "profit_before_tax",
+    # JP GAAP — 粗利（売上総利益）
+    "jpcrp_cor:GrossProfitLossSummaryOfBusinessResults": "gross_profit",
+    "jppfs_cor:GrossProfit":                          "gross_profit",
+    "jppfs_cor:OperatingIncome":                      "operating_income",
+    "jppfs_cor:IncomeTaxesCurrent":                   "income_tax_expense",
+    "jppfs_cor:ShortTermLoansPayable":                "interest_bearing_debt_current",
+    "jppfs_cor:LongTermLoansPayable":                 "interest_bearing_debt_noncurrent",
+    "jppfs_cor:BondsPayable":                         "bonds_payable",
 }
 
 # ── DEI 要素マッピング ────────────────────────────────────────────────────

@@ -5,11 +5,14 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+import io
 import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
 import streamlit as st
+from openpyxl.styles import PatternFill, Font, Alignment
+from openpyxl.utils import get_column_letter
 
 from config.paths import (
     PRICES_STOCKS_DAILY, PRICES_MACRO_DAILY,
@@ -332,6 +335,119 @@ def _render_verify_report(rep: dict) -> None:
 
     if not has_issues:
         st.success("問題なし — 欠損・データ遅れ・株式分割疑いは検出されませんでした。", icon="✅")
+
+
+# ── XBRL → JSON フィールド対応表 Excel 生成 ────────────────────
+@st.cache_data(show_spinner=False)
+def _build_field_mapping_excel() -> bytes:
+    """parse_yuho_xbrl._SUMMARY_FIELDS / _DEI_FIELDS から対応表 Excel を生成。"""
+    from collectors.parse_yuho_xbrl import _SUMMARY_FIELDS, _DEI_FIELDS
+
+    _LABELS_JA: dict[str, str] = {
+        "net_sales":                      "売上高",
+        "ordinary_income":                "経常利益（JP GAAP）",
+        "operating_income":               "営業利益（IFRS）",
+        "profit_before_tax":              "税引前利益（IFRS）",
+        "net_income":                     "当期純利益",
+        "comprehensive_income":           "包括利益",
+        "eps":                            "EPS（基本的1株利益）",
+        "eps_diluted":                    "EPS（希薄化後）",
+        "dps":                            "1株配当（DPS）",
+        "bps":                            "BPS（1株純資産）",
+        "operating_cf":                   "営業キャッシュフロー",
+        "investing_cf":                   "投資キャッシュフロー",
+        "financing_cf":                   "財務キャッシュフロー",
+        "net_assets":                     "純資産（自己資本）",
+        "total_assets":                   "総資産",
+        "cash_end":                       "現金及び現金同等物",
+        "equity_ratio":                   "自己資本比率",
+        "roe":                            "ROE（自己資本利益率）",
+        "per":                            "PER（株価収益率）",
+        "gross_profit":                   "売上総利益（粗利）",
+        "income_tax_expense":             "法人税費用",
+        "interest_bearing_debt_current":  "有利子負債（流動）",
+        "interest_bearing_debt_noncurrent": "有利子負債（固定）",
+        "bonds_payable":                  "社債",
+        "sga_expense":                    "販売費及び一般管理費",
+        "edinet_code":                    "EDINETコード",
+        "sec_code_raw":                   "証券コード（生値）",
+        "company_name":                   "会社名",
+        "accounting_standard_raw":        "会計基準（生値）",
+        "is_consolidated_raw":            "連結 / 個別",
+        "fiscal_year_start":              "事業年度開始日",
+        "fiscal_year_end":                "事業年度終了日",
+        "period_end":                     "当期末日",
+        "period_type":                    "期種（FY / Q1 等）",
+        "is_amendment_raw":               "訂正フラグ",
+    }
+    _INSTANT_FIELDS = {
+        "net_assets", "total_assets", "bps", "cash_end", "equity_ratio",
+        "interest_bearing_debt_current", "interest_bearing_debt_noncurrent", "bonds_payable",
+    }
+
+    def _std(elem: str) -> str:
+        if "IFRS" in elem or elem.startswith(("ifrs-full:", "jpigp_cor:")):
+            return "IFRS"
+        if elem.startswith("jppfs_cor:"):
+            return "JP"
+        return "JP / IFRS"
+
+    def _taxonomy(elem: str) -> str:
+        return elem.split(":")[0] if ":" in elem else elem
+
+    def _ctx(field: str) -> str:
+        return "Instant（時点）" if field in _INSTANT_FIELDS else "Duration（期間）"
+
+    rows_summary, seen = [], set()
+    for elem, field in _SUMMARY_FIELDS.items():
+        if (elem, field) in seen:
+            continue
+        seen.add((elem, field))
+        rows_summary.append({
+            "要素ID":           elem,
+            "タクソノミ":       _taxonomy(elem),
+            "会計基準":         _std(elem),
+            "コンテキスト":     _ctx(field),
+            "JSON フィールド":  field,
+            "指標名（日本語）": _LABELS_JA.get(field, ""),
+        })
+
+    rows_dei = [{
+        "要素ID":           elem,
+        "タクソノミ":       _taxonomy(elem),
+        "会計基準":         "JP / IFRS",
+        "コンテキスト":     "Instant（時点）",
+        "JSON フィールド":  field,
+        "指標名（日本語）": _LABELS_JA.get(field, ""),
+    } for elem, field in _DEI_FIELDS.items()]
+
+    df_s = pd.DataFrame(rows_summary)
+    df_d = pd.DataFrame(rows_dei)
+
+    buf = io.BytesIO()
+    col_widths = {
+        "要素ID": 62, "タクソノミ": 16, "会計基準": 12,
+        "コンテキスト": 20, "JSON フィールド": 34, "指標名（日本語）": 30,
+    }
+    hdr_fill = PatternFill("solid", fgColor="1F4E79")
+    hdr_font = Font(color="FFFFFF", bold=True)
+    row_fill = PatternFill("solid", fgColor="EBF3FB")
+
+    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
+        for sheet, df in [("財務サマリー（5期分）", df_s), ("DEI（メタデータ）", df_d)]:
+            df.to_excel(writer, sheet_name=sheet, index=False)
+            ws = writer.sheets[sheet]
+            for cell in ws[1]:
+                cell.fill = hdr_fill
+                cell.font = hdr_font
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+            for i, col in enumerate(df.columns, 1):
+                ws.column_dimensions[get_column_letter(i)].width = col_widths.get(col, 20)
+            for row_idx in range(2, len(df) + 2, 2):
+                for cell in ws[row_idx]:
+                    cell.fill = row_fill
+
+    return buf.getvalue()
 
 
 # ── 最新営業日（取得ボタン共通） ───────────────────────────────
@@ -666,6 +782,16 @@ if st.button(
         rc, out = _run(["python", "collectors/build_sectors.py"])
     st.session_state["_fetch_result"] = ("セクター CSV 再生成", {"build_sectors": (rc, out)})
     st.rerun()
+
+st.download_button(
+    "📊 XBRL→JSON フィールド対応表 (.xlsx)",
+    data=_build_field_mapping_excel(),
+    file_name="xbrl_field_mapping.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    width="stretch",
+    type="secondary",
+    help="parse_yuho_xbrl.py の要素ID → JSON フィールド対応表を Excel で出力",
+)
 
 if _rep := st.session_state.get("_verify_report"):
     st.html('<div style="height: 16px;"></div>')
