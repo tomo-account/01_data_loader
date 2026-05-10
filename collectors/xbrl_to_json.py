@@ -1,12 +1,12 @@
 """
-xbrl_parser.converter — 決算短信 IXBRL を統一スキーマ JSON に変換する。
+collectors.xbrl_to_json — 決算短信 IXBRL を統一スキーマ JSON に変換する。
 
 使い方（CLI）:
     xbrl-to-json <input>                  # 入力: ZIP / ディレクトリ / IXBRL HTML
     xbrl-to-json <input> --output <dir>
 
 使い方（API）:
-    from xbrl_parser import convert
+    from collectors.xbrl_to_json import convert
     out_path = convert(Path("statement.zip"), out_dir=Path("./statements"))
 """
 from __future__ import annotations
@@ -777,10 +777,10 @@ def _prune_empty(obj):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def make_output_path(out_dir: Path, json_obj: dict) -> Path:
-    code        = json_obj["metadata"].get("code", "unknown")
-    filing_date = json_obj["metadata"].get("filing_date", "0000-00-00") or "0000-00-00"
-    period      = json_obj["metadata"].get("period_type", "FY")
-    return out_dir / f"{code}_{filing_date}_{period}.json"
+    code            = json_obj["metadata"].get("code", "unknown")
+    fiscal_year_end = json_obj["metadata"].get("fiscal_year_end", "0000-00-00") or "0000-00-00"
+    period          = json_obj["metadata"].get("period_type", "FY")
+    return out_dir / f"{code}_{fiscal_year_end}_{period}.json"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -879,39 +879,33 @@ def _derive_correction_metadata(input_path: Path, attachment_dir: Path,
     }
 
 
-def convert_correction_only(input_path: Path, out_dir: Path) -> Path:
-    """Summary 無し（Attachment のみ）の訂正再開示を JSON 化する。"""
+def _parse_correction_dict(input_path: Path) -> dict:
+    """訂正再開示 ZIP → dict（書き込みなし）。"""
     attachment_dir = _find_attachment_dir_anywhere(input_path)
     if attachment_dir is None:
         raise FileNotFoundError(f"Attachment が見つかりません: {input_path}")
 
     print(f"[correct] {attachment_dir}", file=sys.stderr)
 
-    # Attachment IXBRL 群を統合パース
     att_contexts, att_facts = parse_attachment_ixbrls(attachment_dir)
     print(f"[attach]  contexts={len(att_contexts)} facts={len(att_facts)}", file=sys.stderr)
 
-    # ラベル
     lab_files = list(attachment_dir.glob("*-lab.xml"))
     labels: dict[str, str] = {}
     if lab_files:
         labels = parse_label_file(lab_files[0])
 
-    # メタデータ推測
     metadata = _derive_correction_metadata(input_path, attachment_dir, att_contexts)
     print(f"[derived] code={metadata['code']} period={metadata['period_type']} fy_end={metadata['fiscal_year_end']} filing={metadata['filing_date']}", file=sys.stderr)
 
-    # 訂正版 JSON を構築（Summary 由来の項目は null）
     json_obj = _empty_template()
     json_obj["metadata"] = metadata
 
-    # セグメント情報
     segments = extract_segments(att_contexts, att_facts, labels)
     if segments:
         json_obj["segments"] = segments
         print(f"[seg]     current={len(segments.get('current', []))} prior={len(segments.get('prior', []))}", file=sys.stderr)
 
-    # qualitative.htm
     qual_path = attachment_dir / "qualitative.htm"
     if qual_path.exists():
         md = parse_qualitative_html(qual_path)
@@ -919,32 +913,31 @@ def convert_correction_only(input_path: Path, out_dir: Path) -> Path:
             json_obj["qualitative"] = md
             print(f"[qual]    {len(md)} chars", file=sys.stderr)
 
-    # ソース情報
     json_obj["_source"] = {
         "format":         "ixbrl-attachment-only",
         "file":           attachment_dir.name,
         "parser_version": PARSER_VERSION,
     }
 
-    # 空 dict クリーンアップ
-    json_obj = _prune_empty(json_obj)
+    return _prune_empty(json_obj)
 
+
+def convert_correction_only(input_path: Path, out_dir: Path) -> Path:
+    """Summary 無し（Attachment のみ）の訂正再開示を JSON 化する。"""
+    json_obj = _parse_correction_dict(input_path)
     out_path = make_output_path(out_dir, json_obj)
     out_path.write_text(json.dumps(json_obj, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[write]   {out_path}", file=sys.stderr)
     return out_path
 
 
-def convert(input_path: Path, out_dir: Path | None = None) -> Path:
-    out_dir = out_dir or DEFAULT_OUT_DIR
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    # Summary を試す。無ければ訂正再開示として処理。
+def parse(zip_path: Path) -> dict:
+    """ZIP → dict（書き込みなし）。"""
     try:
-        ixbrl_path = find_ixbrl_path(input_path)
+        ixbrl_path = find_ixbrl_path(zip_path)
     except FileNotFoundError as e:
         if "Attachment のみ" in str(e):
-            return convert_correction_only(input_path, out_dir)
+            return _parse_correction_dict(zip_path)
         raise
 
     print(f"[parse]   {ixbrl_path}", file=sys.stderr)
@@ -963,29 +956,24 @@ def convert(input_path: Path, out_dir: Path | None = None) -> Path:
         ixbrl_path=ixbrl_path,
     )
 
-    # ── Attachment 処理（セグメント情報・qualitative） ──
     attachment_dir = find_attachment_dir(ixbrl_path)
     if attachment_dir is not None:
         print(f"[attach]  {attachment_dir}", file=sys.stderr)
 
-        # ラベルファイル（lab.xml）
         lab_files = list(attachment_dir.glob("*-lab.xml"))
         labels: dict[str, str] = {}
         if lab_files:
             labels = parse_label_file(lab_files[0])
             print(f"[labels]  {len(labels)} entries from {lab_files[0].name}", file=sys.stderr)
 
-        # Attachment IXBRL 群を統合パース
         att_contexts, att_facts = parse_attachment_ixbrls(attachment_dir)
         print(f"[attach]  contexts={len(att_contexts)} facts={len(att_facts)}", file=sys.stderr)
 
-        # セグメント情報抽出
         segments = extract_segments(att_contexts, att_facts, labels)
         if segments:
             json_obj["segments"] = segments
             print(f"[seg]     current={len(segments.get('current', []))} prior={len(segments.get('prior', []))}", file=sys.stderr)
 
-        # qualitative.htm
         qual_path = attachment_dir / "qualitative.htm"
         if qual_path.exists():
             md = parse_qualitative_html(qual_path)
@@ -993,9 +981,14 @@ def convert(input_path: Path, out_dir: Path | None = None) -> Path:
                 json_obj["qualitative"] = md
                 print(f"[qual]    {len(md)} chars", file=sys.stderr)
 
-    # 空 dict クリーンアップを再実行
-    json_obj = _prune_empty(json_obj)
+    return _prune_empty(json_obj)
 
+
+def convert(input_path: Path, out_dir: Path | None = None) -> Path:
+    """ZIP → JSON ファイル（parse + 書き込み）。"""
+    out_dir = out_dir or DEFAULT_OUT_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    json_obj = parse(input_path)
     out_path = make_output_path(out_dir, json_obj)
     out_path.write_text(json.dumps(json_obj, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[write]   {out_path}", file=sys.stderr)

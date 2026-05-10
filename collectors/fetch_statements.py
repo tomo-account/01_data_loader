@@ -31,7 +31,8 @@ HTTP_HEADERS = {"User-Agent": "Mozilla/5.0"}
 SLEEP_SEC    = 1.0
 XBRL_IN_DIR  = STATEMENTS_ZIP
 
-from collectors.xbrl_to_json import convert as xbrl_convert  # noqa: E402
+import json as _json
+from collectors.xbrl_to_json import parse as xbrl_parse, make_output_path  # noqa: E402
 
 
 def pdf_url_to_xbrl_url(pdf_url: str) -> str | None:
@@ -90,7 +91,9 @@ def process_row(code: str, title: str, pdf_url: str) -> None:
     # JSON 変換（常に上書き）
     try:
         STATEMENTS.mkdir(parents=True, exist_ok=True)
-        out_path = xbrl_convert(zip_path, out_dir=STATEMENTS)
+        json_obj = xbrl_parse(zip_path)
+        out_path = make_output_path(STATEMENTS, json_obj)
+        out_path.write_text(_json.dumps(json_obj, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"  [OK]   JSON: {out_path.name}")
     except Exception as e:
         print(f"  [ERR] 変換失敗 {zip_path.name}: {e}")

@@ -28,7 +28,7 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config.paths import YUHO_ZIP, YUHO
 
-PARSER_VERSION = "0.1.0"
+PARSER_VERSION = "0.1.2"
 
 # ── コンテキストID → 集計期間キー ────────────────────────────────────────
 _PERIOD_MAP: dict[str, str] = {
@@ -54,6 +54,7 @@ _SUMMARY_FIELDS: dict[str, str] = {
     "jpcrp_cor:BasicEarningsLossPerShareSummaryOfBusinessResults":                      "eps",
     "jpcrp_cor:DilutedEarningsPerShareSummaryOfBusinessResults":                        "eps_diluted",
     "jpcrp_cor:DividendsPerShareSummaryOfBusinessResults":                              "dps",
+    "jpcrp_cor:DividendPaidPerShareSummaryOfBusinessResults":                           "dps",
     # CF（Duration）
     "jpcrp_cor:NetCashProvidedByUsedInOperatingActivitiesSummaryOfBusinessResults":     "operating_cf",
     "jpcrp_cor:NetCashProvidedByUsedInInvestingActivitiesSummaryOfBusinessResults":     "investing_cf",
@@ -95,12 +96,17 @@ _SUMMARY_FIELDS: dict[str, str] = {
     "jpigp_cor:IncomeTaxExpenseIFRS":                 "income_tax_expense",
     "jpigp_cor:BondsAndBorrowingsCLIFRS":             "interest_bearing_debt_current",
     "jpigp_cor:BondsAndBorrowingsNCLIFRS":            "interest_bearing_debt_noncurrent",
+    "jpigp_cor:LongTermDebtNCLIFRS":                  "interest_bearing_debt_noncurrent",
+    "jpigp_cor:LeaseLiabilitiesCLIFRS":               "lease_liabilities_current",
+    "jpigp_cor:LeaseLiabilitiesNCLIFRS":              "lease_liabilities_noncurrent",
     # 汎用 IFRS（総合商社・資源会社等）— 順次拡張予定
     "ifrs-full:OperatingProfit":                      "operating_income",
     "ifrs-full:GrossProfit":                          "gross_profit",
     "ifrs-full:IncomeTaxExpense":                     "income_tax_expense",
     "ifrs-full:CurrentBorrowings":                    "interest_bearing_debt_current",
     "ifrs-full:NoncurrentBorrowings":                 "interest_bearing_debt_noncurrent",
+    "ifrs-full:CurrentLeaseLiabilities":              "lease_liabilities_current",
+    "ifrs-full:NoncurrentLeaseLiabilities":           "lease_liabilities_noncurrent",
     # 総合商社 IFRS — 営業利益要素なし。粗利・販管費から計算するために抽出
     "jpigp_cor:SellingGeneralAndAdministrativeExpensesIFRS": "sga_expense",
     "jpigp_cor:ProfitLossBeforeTaxIFRS":              "profit_before_tax",
@@ -112,6 +118,63 @@ _SUMMARY_FIELDS: dict[str, str] = {
     "jppfs_cor:ShortTermLoansPayable":                "interest_bearing_debt_current",
     "jppfs_cor:LongTermLoansPayable":                 "interest_bearing_debt_noncurrent",
     "jppfs_cor:BondsPayable":                         "bonds_payable",
+    "jppfs_cor:CommercialPapersLiabilities":          "commercial_papers",
+    "jppfs_cor:CurrentPortionOfBonds":                "current_portion_of_bonds",
+    # ── 減価償却費・償却費 (D&A) ─────────────────────────────────────────────
+    # JP GAAP — CF計算書の減価償却費加算項目（最も安定して存在する）
+    "jppfs_cor:DepreciationAndAmortizationOpeCF":                                 "depreciation",
+    # IFRS jpigp — CF計算書（ENEOS・コスモ等）
+    "jpigp_cor:DepreciationAndAmortizationOpeCFIFRS":                             "depreciation",
+    # IFRS jpigp — CF計算書（三菱商事等）
+    "jpigp_cor:DepreciationExpenseOpeCFIFRS":                                     "depreciation",
+    # IFRS jpigp — P&L営業費用内の減価償却費（三井物産等 CF非掲載の場合のフォールバック）
+    "jpigp_cor:DepreciationAndAmortizationOperatingExpensesIFRS":                 "depreciation",
+    # ── 設備投資 CAPEX（投資CF内訳、通常マイナス値） ────────────────────────
+    # JP GAAP — 有形固定資産取得
+    "jppfs_cor:PurchaseOfPropertyPlantAndEquipmentInvCF":                         "capex_ppe",
+    # JP GAAP — 無形固定資産取得
+    "jppfs_cor:PurchaseOfIntangibleAssetsInvCF":                                  "capex_intangible",
+    # IFRS jpigp — 有形固定資産取得
+    "jpigp_cor:PurchaseOfPropertyPlantAndEquipmentInvCFIFRS":                     "capex_ppe",
+    # IFRS jpigp — 無形固定資産取得
+    "jpigp_cor:PurchaseOfIntangibleAssetsInvCFIFRS":                              "capex_intangible",
+    # ══ BS 詳細（Instant） ═══════════════════════════════════════════════════
+    # ── 流動資産・流動負債 合計 ───────────────────────────────────────────────
+    "jppfs_cor:CurrentAssets":                                                    "current_assets",
+    "jpigp_cor:CurrentAssetsIFRS":                                                "current_assets",
+    "jppfs_cor:CurrentLiabilities":                                               "current_liabilities",
+    "jpigp_cor:TotalCurrentLiabilitiesIFRS":                                      "current_liabilities",
+    "jppfs_cor:NoncurrentAssets":                                                 "noncurrent_assets",
+    "jpigp_cor:NonCurrentAssetsIFRS":                                             "noncurrent_assets",
+    "jppfs_cor:NoncurrentLiabilities":                                            "noncurrent_liabilities",
+    # ── 売上債権（営業資産） ──────────────────────────────────────────────────
+    "jppfs_cor:NotesAndAccountsReceivableTrade":                                  "trade_receivables",
+    "jpigp_cor:TradeAndOtherReceivablesCAIFRS":                                   "trade_receivables",
+    # ── 棚卸資産 ─────────────────────────────────────────────────────────────
+    "jppfs_cor:Inventories":                                                      "inventories",
+    "jpigp_cor:InventoriesCAIFRS":                                                "inventories",
+    # ── 買掛金（営業負債） ────────────────────────────────────────────────────
+    "jppfs_cor:NotesAndAccountsPayableTrade":                                     "trade_payables",
+    "jpigp_cor:TradeAndOtherPayablesCLIFRS":                                      "trade_payables",
+    # ── 有形固定資産（純額） ──────────────────────────────────────────────────
+    "jppfs_cor:PropertyPlantAndEquipment":                                        "ppe",
+    "jpigp_cor:PropertyPlantAndEquipmentIFRS":                                    "ppe",
+    # ── のれん ───────────────────────────────────────────────────────────────
+    "jppfs_cor:Goodwill":                                                         "goodwill",
+    "jpigp_cor:GoodwillIFRS":                                                     "goodwill",
+    # ── 無形固定資産（のれん除く） ────────────────────────────────────────────
+    "jppfs_cor:IntangibleAssets":                                                 "intangible_assets",
+    "jpigp_cor:IntangibleAssetsIFRS":                                             "intangible_assets",
+    # ── 投資（持分法 / その他投資有価証券） ──────────────────────────────────
+    "jppfs_cor:InvestmentSecurities":                                             "investment_securities",
+    "jpigp_cor:OtherInvestmentsIFRS":                                             "investment_securities",
+    "jpigp_cor:InvestmentsAccountedForUsingEquityMethodIFRS":                     "equity_method_investments",
+    # ── 自己株式 ─────────────────────────────────────────────────────────────
+    "jppfs_cor:TreasuryStock":                                                    "treasury_stock",
+    "jpigp_cor:TreasurySharesIFRS":                                               "treasury_stock",
+    # ── 非支配株主持分 ────────────────────────────────────────────────────────
+    "jppfs_cor:NonControllingInterests":                                          "noncontrolling_interests",
+    "jpigp_cor:NonControllingInterestsIFRS":                                      "noncontrolling_interests",
 }
 
 # ── DEI 要素マッピング ────────────────────────────────────────────────────
@@ -241,20 +304,41 @@ def _extract_dei(lut: dict[tuple[str, str], str]) -> dict[str, Any]:
     }
 
 
+_DPS_ELEMENTS = {
+    "jpcrp_cor:DividendPaidPerShareSummaryOfBusinessResults",
+    "jpcrp_cor:DividendsPerShareSummaryOfBusinessResults",
+}
+
+# DPS は非連結コンテキストで報告されることが多いため専用マップを持つ
+_DPS_PERIOD_MAP: dict[str, str] = {
+    f"Prior4YearDuration_NonConsolidatedMember":  "prior4",
+    f"Prior3YearDuration_NonConsolidatedMember":  "prior3",
+    f"Prior2YearDuration_NonConsolidatedMember":  "prior2",
+    f"Prior1YearDuration_NonConsolidatedMember":  "prior1",
+    f"CurrentYearDuration_NonConsolidatedMember": "current",
+}
+
+
 def _extract_summary(lut: dict[tuple[str, str], str]) -> dict[str, dict]:
     """Summary of Business Results（5期分）を抽出。"""
     periods = list(_PERIOD_MAP.keys())
     result: dict[str, dict] = {p: {} for p in set(_PERIOD_MAP.values())}
 
     for elem, field in _SUMMARY_FIELDS.items():
-        for ctx_id in periods:
+        # DPS は通常コンテキスト → 非連結コンテキストの順で探す
+        ctx_list = list(periods)
+        if elem in _DPS_ELEMENTS:
+            ctx_list = ctx_list + list(_DPS_PERIOD_MAP.keys())
+        combined_map = {**_PERIOD_MAP, **_DPS_PERIOD_MAP}
+
+        for ctx_id in ctx_list:
             val_raw = lut.get((elem, ctx_id))
             if val_raw is None:
                 continue
             val = _to_number(val_raw)
             if val is None:
                 continue
-            period_key = _PERIOD_MAP[ctx_id]
+            period_key = combined_map[ctx_id]
             # 先着優先（同じ period_key・field に複数マッチした場合）
             if field not in result[period_key]:
                 result[period_key][field] = val
@@ -294,13 +378,41 @@ def parse_zip(zip_path: Path) -> dict:
     }
 
 
+parse = parse_zip  # 決算短信パーサーと統一したシグネチャ
+
+
+import datetime as _dt
+
+_PERIOD_OFFSETS: dict[str, int] = {
+    "prior4": 4, "prior3": 3, "prior2": 2, "prior1": 1, "current": 0,
+}
+
+
+def _fy_end_approx(base_end: str, offset: int) -> str:
+    """base_end から offset 年前の期末日を概算する（うるう年対応）。"""
+    try:
+        d = _dt.date.fromisoformat(base_end)
+        y = d.year - offset
+        try:
+            return _dt.date(y, d.month, d.day).isoformat()
+        except ValueError:
+            return _dt.date(y, d.month, 28).isoformat()
+    except (ValueError, TypeError):
+        return ""
+
+
 def parse_all(
     zip_root: Path = YUHO_ZIP,
     out_root: Path = YUHO,
     force:    bool = False,
 ) -> tuple[int, int, int]:
-    """zip_root 以下の全 ZIP を処理して out_root に JSON を書き出す。
-    (ok, skip, err) のカウントを返す。
+    """zip_root 以下の全 ZIP を処理し、年度別 JSON を out_root に書き出す。
+
+    出力ファイル名: {edinet_code}_{fiscal_year_end}.json
+    1 ZIP から最大 5 ファイル（prior4〜current）を生成する。
+    同名ファイルが存在する場合は force=True のときのみ上書き。
+
+    返り値: (ok, skip, err) のカウント。
     """
     ok = skip = err = 0
     zips = sorted(zip_root.rglob("*.zip"))
@@ -308,12 +420,6 @@ def parse_all(
 
     for zp in zips:
         edinet_code = zp.parent.name
-        out_path    = out_root / edinet_code / f"{zp.stem}.json"
-
-        if out_path.exists() and not force:
-            skip += 1
-            continue
-
         try:
             obj = parse_zip(zp)
         except Exception as e:
@@ -321,16 +427,35 @@ def parse_all(
             err += 1
             continue
 
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(
-            json.dumps(obj, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
-        company = obj["metadata"].get("company_name", "")
-        fy      = obj["metadata"].get("fiscal_year_end", "")
-        periods = list(obj.get("summary_5yr", {}).keys())
-        print(f"  [ok] {edinet_code}/{zp.stem}  {company} {fy}  periods={periods}")
-        ok += 1
+        base_meta = obj["metadata"]
+        base_end  = base_meta.get("fiscal_year_end", "")
+        company   = base_meta.get("company_name", "")
+
+        for period_key, period_data in obj.get("summary_5yr", {}).items():
+            offset   = _PERIOD_OFFSETS.get(period_key, 0)
+            fy_end   = _fy_end_approx(base_end, offset)
+            if not fy_end:
+                continue
+
+            fname    = f"{edinet_code}_{fy_end}.json"
+            out_path = out_root / edinet_code / fname
+
+            if out_path.exists() and not force:
+                skip += 1
+                continue
+
+            yearly_obj = {
+                "metadata":   {**base_meta, "fiscal_year_end": fy_end},
+                "financials": period_data,
+                "_source":    obj.get("_source", {}),
+            }
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(
+                json.dumps(yearly_obj, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            print(f"  [ok] {edinet_code}/{fname}  {company} ({period_key})")
+            ok += 1
 
     print(f"\n[done] ok={ok}  skip={skip}  err={err}")
     if ok:

@@ -42,7 +42,11 @@ WATCH_MARKET_SELECT = MASTER / "watch_market_select.csv"
 # 手動マスタ（EDINET DB 等の不正確な値を上書きする用）
 MANUAL_OVERRIDES = MASTER / "manual_overrides.csv"
 
+# 株式分割マスタ（EPS/BPS の遡及修正用）
+STOCK_SPLITS = MASTER / "stock_splits.csv"
+
 # 有価証券報告書 XBRL（金融庁 EDINET API v2）
 YUHO_ZIP   = DATA / "yuho_zip"    # XBRL ZIP 保存先（{edinet_code}/{doc_id}.zip）
 YUHO       = DATA / "yuho"        # ZIP 展開 JSON 保存先（{edinet_code}/{doc_id}.json）
+YUHO_TEXT  = DATA / "yuho_text"   # テキストセクション JSON（{edinet_code}/{doc_id}.json）
 EDINET_IDX = DATA / "edinet_index.parquet"  # 書類インデックス（日次更新）
