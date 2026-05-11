@@ -32,3 +32,6 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Windows ショートカット（パスに個人名が含まれるため）
+*.lnk
